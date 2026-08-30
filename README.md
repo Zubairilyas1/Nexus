@@ -2,12 +2,14 @@
 
 > Transform any RTSP camera stream into an intelligent, programmable spatial sensor — no new hardware required.
 
-## Overview
+## Overview at zubair branch
 
 NexusVision is a pure-software solution that replaces expensive physical traffic infrastructure (inductive loops, radar sensors) with AI-powered video analytics running on commodity edge hardware. It turns existing IP/CCTV cameras into virtual loop counters with real-time zone monitoring, vehicle classification, and historical analytics.
 
 ### Key Features
+
 ilyas
+
 
 - **Live Analytics Stream**: Real-time bounding boxes, classifications, and confidence scores overlaid on video
 - **Interactive Zone Designer**: Draw custom polygon zones directly on the live feed via browser
