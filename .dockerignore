@@ -1,0 +1,48 @@
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Logs
+logs/
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Certificates
+nginx/certs/*.pem
+nginx/certs/*.key
+nginx/certs/*.csr
+nginx/certs/*.srl
+nginx/certs/*.cnf
+
+# Models
+backend/models/*
+!backend/models/.gitkeep
+
+# Database
+init-scripts/*.sql
+
+# CI
+.github/
+
+# Docs
+*.md
+!README.md

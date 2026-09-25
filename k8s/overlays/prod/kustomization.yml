@@ -1,0 +1,65 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namePrefix: prod-
+namespace: nexusvision
+
+patches:
+  - target:
+      kind: Deployment
+      name: nexus-api
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 3
+  - target:
+      kind: Deployment
+      name: nexus-web
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 3
+  - target:
+      kind: HorizontalPodAutoscaler
+      name: nexus-api-hpa
+    patch: |
+      - op: replace
+        path: /spec/minReplicas
+        value: 3
+      - op: replace
+        path: /spec/maxReplicas
+        value: 20
+  - target:
+      kind: Ingress
+      name: nexus-ingress
+    patch: |
+      - op: replace
+        path: /spec/tls/0/hosts
+        value:
+          - app.nexusvision.ai
+          - api.nexusvision.ai
+      - op: replace
+        path: /spec/tls/0/secretName
+        value: nexus-prod-tls
+      - op: replace
+        path: /spec/rules/0/host
+        value: app.nexusvision.ai
+      - op: replace
+        path: /spec/rules/1/host
+        value: api.nexusvision.ai
+
+configMapGenerator:
+  - name: nexus-config
+    behavior: merge
+    literals:
+      - ENVIRONMENT=production
+      - DEBUG=false
+
+secretGenerator:
+  - name: nexus-secrets
+    behavior: merge
+    envs:
+      - secrets.env

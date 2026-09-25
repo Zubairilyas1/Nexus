@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nexusvision
+  labels:
+    app.kubernetes.io/name: nexusvision
+    app.kubernetes.io/part-of: nexusvision

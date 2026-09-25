@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexus-api
+  namespace: nexusvision
+  labels:
+    app: nexus-api
+spec:
+  selector:
+    app: nexus-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+  type: ClusterIP
