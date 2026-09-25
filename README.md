@@ -175,3 +175,11 @@ MIT License - see [LICENSE](LICENSE) for details.
 - FastAPI
 - Next.js
 - All open-source contributors
+
+### Model Quantization Benchmark (CPU)
+| Model | Size | FPS | Latency | Speedup |
+|---|---|---|---|---|
+| yolov8n.onnx (FP32) | 12.3 MB | 14.2 | 70.4 ms | 1.0x |
+| yolov8n_int8.onnx (INT8) | 3.4 MB | 8.1 | 123.5 ms | 0.6x |
+
+*Note: INT8 ONNX quantization on this specific CPU architecture introduces overhead via QDQ nodes rather than hardware acceleration, resulting in lower FPS. The FP32 model remains the active default in `.env` for better performance.*

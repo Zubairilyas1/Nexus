@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nexus-api-pdb
+  namespace: nexusvision
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: nexus-api

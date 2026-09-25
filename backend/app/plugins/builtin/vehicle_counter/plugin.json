@@ -1,0 +1,23 @@
+{
+  "name": "vehicle_counter",
+  "version": "1.0.0",
+  "author": "NexusVision",
+  "description": "Counts vehicles per zone with configurable time windows",
+  "category": "counting",
+  "module": "plugin",
+  "class": "Plugin",
+  "config_schema": {
+    "time_window_seconds": {
+      "type": "integer",
+      "default": 60,
+      "minimum": 1,
+      "maximum": 3600,
+      "description": "Counting time window in seconds"
+    },
+    "vehicle_classes": {
+      "type": "array",
+      "default": ["car", "truck", "bus", "motorcycle"],
+      "description": "Vehicle classes to count"
+    }
+  }
+}

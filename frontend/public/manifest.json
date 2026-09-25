@@ -1,0 +1,45 @@
+{
+  "name": "NexusVision",
+  "short_name": "NexusVision",
+  "description": "AI-Powered Edge Video Analytics & Traffic Monitoring",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#06b6d4",
+  "orientation": "any",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["business", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/",
+      "description": "View live dashboard"
+    },
+    {
+      "name": "Zone Designer",
+      "url": "/designer",
+      "description": "Design and manage zones"
+    },
+    {
+      "name": "Analytics",
+      "url": "/analytics",
+      "description": "View analytics"
+    }
+  ]
+}

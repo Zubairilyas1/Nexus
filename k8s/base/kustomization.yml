@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yml
+  - configmap.yml
+  - secret.yml
+  - api-deployment.yml
+  - api-service.yml
+  - api-hpa.yml
+  - web-deployment.yml
+  - web-service.yml
+  - ingress.yml
+  - network-policy.yml
+  - pdb.yml
+
+commonLabels:
+  app.kubernetes.io/part-of: nexusvision
+  app.kubernetes.io/managed-by: kustomize

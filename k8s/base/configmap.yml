@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nexus-config
+  namespace: nexusvision
+data:
+  ENVIRONMENT: "production"
+  DEBUG: "false"
+  POSTGRES_HOST: "postgres"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "nexusvision"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  API_PORT: "8000"
+  WEB_PORT: "3000"
