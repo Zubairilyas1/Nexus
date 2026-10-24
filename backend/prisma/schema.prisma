@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ORG_ADMIN
+  PROJECT_ADMIN
+  OPERATOR
+  VIEWER
+}
+
+enum MembershipStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  REVOKED
+}
+
+model User {
+  id                    String    @id @default(cuid())
+  email                 String    @unique
+  name                  String?
+  passwordHash          String
+  avatarUrl             String?
+  globalRole            UserRole  @default(VIEWER)
+  emailVerified         DateTime?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  lastLoginAt           DateTime?
+
+  memberships           Membership[]
+  projectMemberships    ProjectMembership[]
+  sessions              Session[]
+  auditLogs             AuditLog[]
+  invitedMemberships    Membership[]  @relation("MembershipInvites")
+
+  @@index([email])
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  logoUrl     String?
+  settings    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  memberships Membership[]
+  projects    Project[]
+  streams     Stream[]
+  auditLogs   AuditLog[]
+
+  @@index([slug])
+}
+
+model Project {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String
+  description     String?
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  timezone        String   @default("UTC")
+  retentionDays   Int      @default(30)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  streams         Stream[]
+  zones           Zone[]
+  memberships     ProjectMembership[]
+
+  @@unique([organizationId, slug])
+  @@index([organizationId])
+}
+
+model Membership {
+  id             String           @id @default(cuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  role           UserRole         @default(VIEWER)
+  status         MembershipStatus @default(PENDING)
+  invitedById    String?
+  invitedBy      User?            @relation("MembershipInvites", fields: [invitedById], references: [id])
+  joinedAt       DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model ProjectMembership {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  role      UserRole @default(VIEWER)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, projectId])
+  @@index([projectId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refreshToken String   @unique
+  userAgent    String?
+  ipAddress    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([refreshToken])
+}
+
+model Stream {
+  streamId       String   @id
+  rtspUrl        String?
+  youtubeUrl     String?
+  name           String
+  frameWidth     Int      @default(1280)
+  frameHeight    Int      @default(720)
+  targetFps      Int      @default(30)
+  enabled        Boolean  @default(true)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  projectId      String?
+  project        Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([projectId])
+}
+
+model Zone {
+  id              String   @id @default(cuid())
+  label           String
+  color           String   @default("#06b6d4")
+  maxDwellMs      Int      @default(30000)
+  active          Boolean  @default(true)
+  coordinates     Json
+  totalEntries    Int      @default(0)
+  avgDwellMs      Float    @default(0)
+  projectId       String
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  streamId       String?  @db.VarChar(100)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  events TrafficEvent[]
+
+  @@index([projectId])
+  @@index([streamId])
+}
+
+model TrafficEvent {
+  id            String   @id @default(cuid())
+  zoneId        String
+  zone          Zone     @relation(fields: [zoneId], references: [id], onDelete: Cascade)
+  trackId       String
+  vehicleClass  String
+  eventType     String
+  confidence    Float
+  dwellTimeMs   Int?
+  bbox          Json?
+  timestamp     DateTime @default(now())
+
+  @@index([zoneId, timestamp])
+  @@index([trackId])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  userId         String?
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  action         String
+  resource       String
+  resourceId     String?
+  metadata       Json?
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime @default(now())
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  email     String
+  type      String   // "email_verification", "password_reset", "invite"
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([email, type])
+}
