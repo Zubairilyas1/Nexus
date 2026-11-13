@@ -1,0 +1,404 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Radius */
+    --radius: 0.75rem;
+    
+    /* Base Colors - Professional Dark Theme */
+    --background: 220 20% 4%;
+    --foreground: 210 20% 98%;
+    
+    --card: 220 18% 6%;
+    --card-foreground: 210 20% 98%;
+    
+    --popover: 220 18% 6%;
+    --popover-foreground: 210 20% 98%;
+    
+    --muted: 217 15% 12%;
+    --muted-foreground: 215 15% 55%;
+    
+    --border: 217 15% 18%;
+    --input: 217 15% 18%;
+    --ring: 200 85% 55%;
+    
+    /* Primary - Professional Blue */
+    --primary: 200 85% 55%;
+    --primary-foreground: 220 20% 4%;
+    --primary-50: 198 95% 95%;
+    --primary-100: 198 95% 90%;
+    --primary-200: 198 95% 80%;
+    --primary-300: 198 95% 65%;
+    --primary-400: 198 95% 55%;
+    --primary-500: 200 85% 55%;
+    --primary-600: 200 85% 48%;
+    --primary-700: 200 85% 40%;
+    --primary-800: 200 85% 32%;
+    --primary-900: 200 85% 25%;
+    
+    --secondary: 217 15% 15%;
+    --secondary-foreground: 210 20% 98%;
+    
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 210 20% 98%;
+    
+    --accent: 217 15% 15%;
+    --accent-foreground: 210 20% 98%;
+    
+    /* Traffic-specific colors - Colorblind safe palette */
+    --traffic-car: 200 85% 55%;        /* Blue */
+    --traffic-truck: 30 95% 50%;       /* Orange */
+    --traffic-bus: 290 75% 55%;        /* Purple */
+    --traffic-motorcycle: 150 70% 45%; /* Teal */
+    --traffic-bicycle: 45 90% 55%;     /* Yellow-Green */
+    --traffic-pedestrian: 0 75% 55%;   /* Red */
+    
+    /* Zone states */
+    --zone-active: 150 70% 45%;        /* Teal - active zone */
+    --zone-inactive: 217 15% 25%;      /* Muted - inactive */
+    --zone-hover: 150 70% 55%;         /* Brighter teal */
+    --zone-dwell: 30 95% 50%;          /* Orange - dwell warning */
+    
+    /* Status colors */
+    --status-online: 150 70% 45%;      /* Teal */
+    --status-warning: 30 95% 50%;      /* Orange */
+    --status-offline: 217 15% 40%;     /* Muted */
+    --status-recording: 0 75% 55%;     /* Red */
+
+    /* Semantic feedback */
+    --success: 152 69% 50%;            /* Emerald */
+    --warning: 38 92% 50%;             /* Amber */
+    
+    /* Fonts */
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-display: 'Inter', system-ui, sans-serif;
+  }
+  
+  .dark {
+    /* Dark is the only theme */
+    --background: 220 20% 4%;
+    --foreground: 210 20% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans);
+  }
+  
+  /* Selection */
+  ::selection {
+    @apply bg-primary/20 text-primary;
+  }
+  
+  /* Focus visible */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+}
+
+@layer utilities {
+  /* Text balance */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Animation delays */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+  
+  /* Glass morphism */
+  .glass {
+    @apply bg-background/80 backdrop-blur-xl border border-border/50;
+  }
+  
+  .glass-strong {
+    @apply bg-background/90 backdrop-blur-2xl border border-border/30;
+  }
+  
+  /* Text gradients */
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+  
+  .text-gradient-subtle {
+    @apply bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent;
+  }
+  
+  /* Status indicators */
+  .status-dot {
+    @apply relative flex h-2 w-2 rounded-full;
+  }
+  
+  .status-dot::after {
+    @apply content-[''] absolute inset-0 rounded-full opacity-75 animate-pulse-slow;
+  }
+  
+  .status-online .status-dot {
+    @apply bg-status-online;
+  }
+  
+  .status-online .status-dot::after {
+    @apply bg-status-online;
+  }
+  
+  .status-warning .status-dot {
+    @apply bg-status-warning;
+  }
+  
+  .status-warning .status-dot::after {
+    @apply bg-status-warning;
+  }
+  
+  .status-offline .status-dot {
+    @apply bg-status-offline;
+  }
+  
+  .status-recording .status-dot {
+    @apply bg-status-recording;
+  }
+  
+  .status-recording .status-dot::after {
+    @apply bg-status-recording;
+  }
+  
+  /* Zone indicators */
+  .zone-indicator {
+    @apply flex h-3 w-3 rounded-full border-2 transition-colors;
+  }
+  
+  .zone-active {
+    @apply bg-zone-active border-zone-active;
+  }
+  
+  .zone-inactive {
+    @apply bg-transparent border-zone-inactive;
+  }
+  
+  .zone-dwell {
+    @apply bg-zone-dwell border-zone-dwell animate-pulse-slow;
+  }
+  
+  /* Vehicle type indicators */
+  .vehicle-indicator {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  
+  .vehicle-car {
+    @apply bg-traffic-car/15 text-traffic-car border border-traffic-car/30;
+  }
+  
+  .vehicle-truck {
+    @apply bg-traffic-truck/15 text-traffic-truck border border-traffic-truck/30;
+  }
+  
+  .vehicle-bus {
+    @apply bg-traffic-bus/15 text-traffic-bus border border-traffic-bus/30;
+  }
+  
+  .vehicle-motorcycle {
+    @apply bg-traffic-motorcycle/15 text-traffic-motorcycle border border-traffic-motorcycle/30;
+  }
+  
+  .vehicle-bicycle {
+    @apply bg-traffic-bicycle/15 text-traffic-bicycle border border-traffic-bicycle/30;
+  }
+  
+  .vehicle-pedestrian {
+    @apply bg-traffic-pedestrian/15 text-traffic-pedestrian border border-traffic-pedestrian/30;
+  }
+  
+  /* Elevation shadows */
+  .shadow-elevation-1 {
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+  
+  .shadow-elevation-2 {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .shadow-elevation-3 {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+  
+  .shadow-elevation-4 {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+  
+  .shadow-elevation-5 {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+  
+  /* Canvas overlay */
+  .canvas-overlay {
+    @apply absolute inset-0 touch-none select-none;
+  }
+  
+  /* Hide scrollbar but allow scroll */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  /* Button variants */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/100 shadow-elevation-2;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-secondary text-secondary-foreground hover:bg-secondary/80 active:bg-secondary/90;
+  }
+  
+  .btn-outline {
+    @apply btn border border-border bg-transparent hover:bg-accent active:bg-accent/50;
+  }
+  
+  .btn-ghost {
+    @apply btn bg-transparent hover:bg-accent active:bg-accent/50;
+  }
+  
+  .btn-destructive {
+    @apply btn bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive;
+  }
+  
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs gap-1.5;
+  }
+  
+  .btn-lg {
+    @apply px-6 py-3 text-base gap-2;
+  }
+  
+  .btn-icon {
+    @apply btn p-2;
+  }
+  
+  /* Card variants */
+  .card {
+    @apply rounded-xl bg-card border border-border shadow-elevation-2;
+  }
+  
+  .card-hover {
+    @apply card transition-shadow duration-300 hover:shadow-elevation-4;
+  }
+  
+  .card-interactive {
+    @apply card-hover cursor-pointer;
+  }
+  
+  /* Input */
+  .input {
+    @apply flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply badge bg-primary/15 text-primary border border-primary/30;
+  }
+  
+  .badge-secondary {
+    @apply badge bg-secondary text-secondary-foreground border border-border;
+  }
+  
+  .badge-success {
+    @apply badge bg-status-online/15 text-status-online border border-status-online/30;
+  }
+  
+  .badge-warning {
+    @apply badge bg-status-warning/15 text-status-warning border border-status-warning/30;
+  }
+  
+  .badge-destructive {
+    @apply badge bg-destructive/15 text-destructive border border-destructive/30;
+  }
+  
+  .badge-outline {
+    @apply badge border border-border bg-transparent;
+  }
+  
+  /* Table */
+  .table-container {
+    @apply w-full overflow-x-auto;
+  }
+  
+  .table {
+    @apply w-full caption-bottom text-sm;
+  }
+  
+  .table-header {
+    @apply border-b border-border;
+  }
+  
+  .table-row {
+    @apply border-b border-border transition-colors hover:bg-muted/50;
+  }
+  
+  .table-head {
+    @apply h-12 px-4 text-left align-middle font-medium text-muted-foreground;
+  }
+  
+  .table-cell {
+    @apply p-4 align-middle;
+  }
+}
